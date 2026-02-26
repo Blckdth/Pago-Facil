@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pago fácil — Bombas y Carburadores</title>
+  <style>
+    :root{--bg:#071f24;--card:#0c2a30;--txt:#eaf6f7;--muted:#b7d4d7;--btn:#ffffff;--btnTxt:#0b1f24;--ok:#25D366;}
+    *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    body{margin:0;background:linear-gradient(180deg,var(--bg),#04161a);color:var(--txt)}
+    .wrap{max-width:880px;margin:0 auto;padding:22px}
+    .hero{padding:18px 18px 10px}
+    h1{margin:0 0 6px;font-size:28px;letter-spacing:.2px}
+    .sub{margin:0;color:var(--muted);line-height:1.4}
+    .grid{display:grid;gap:14px;grid-template-columns:1fr}
+    @media (min-width:860px){.grid{grid-template-columns:1.1fr .9fr}}
+    .card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;backdrop-filter:blur(6px)}
+    .k{color:var(--muted);font-size:13px;margin:12px 0 6px}
+    .big{font-size:22px;font-weight:800;letter-spacing:.6px;word-break:break-all}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    button,a.btn{
+      appearance:none;border:0;border-radius:12px;padding:12px 14px;
+      background:var(--btn);color:var(--btnTxt);font-weight:800;cursor:pointer;
+      display:inline-flex;align-items:center;gap:10px;text-decoration:none;
+    }
+    button.secondary{background:rgba(255,255,255,.08);color:var(--txt);border:1px solid rgba(255,255,255,.12)}
+    .pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:6px 10px;
+      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:var(--muted);font-size:12px}
+    .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;
+      background:rgba(0,0,0,.72);color:#fff;padding:10px 12px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.18);opacity:0;pointer-events:none;transition:.2s}
+    .toast.show{opacity:1}
+    input,textarea{
+      width:100%;padding:12px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.18);color:var(--txt);outline:none
+    }
+    textarea{min-height:88px;resize:vertical}
+    .wa{background:var(--ok);color:#05210f}
+    details{border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);padding:10px}
+    summary{cursor:pointer;font-weight:800}
+    .small{font-size:13px;color:var(--muted);line-height:1.45}
+    footer{margin-top:14px;color:var(--muted);font-size:12px;text-align:center;opacity:.9}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div class="pill">💳 Pago fácil</div>
+      <h1>Bombas y Carburadores</h1>
+      <p class="sub">Copia los datos y pégalos en tu app bancaria. El monto es <b>variable</b>. Si quieres, al final manda tu comprobante por WhatsApp.</p>
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <div class="k">Banco</div>
+        <div class="big" id="banco">Banamex</div>
+
+        <div class="k">Cuenta (depósitos o transferencias)</div>
+        <div class="row">
+          <div class="big" id="cuenta">5204165780779397</div>
+          <button class="secondary" onclick="copyText('cuenta')">📋 Copiar cuenta</button>
+        </div>
+
+        <div class="k">CLABE</div>
+        <div class="row">
+          <div class="big" id="clabe">002905701268212964</div>
+          <button class="secondary" onclick="copyText('clabe')">📋 Copiar CLABE</button>
+        </div>
+
+        <div class="k">Referencia / concepto</div>
+        <input id="referencia" placeholder="Ej: Pedido 123 / Nombre del cliente" />
+
+        <div class="k">Monto (MXN)</div>
+        <input id="monto" inputmode="decimal" placeholder="Ej: 1500" />
+
+        <div class="k">Notas</div>
+        <textarea id="notas" placeholder="Opcional: detalles del pedido, sucursal, etc."></textarea>
+
+        <div class="row" style="margin-top:12px">
+          <button onclick="copyResumen()">📄 Copiar resumen</button>
+          <a class="btn wa" id="waBtn" href="#" onclick="return openWhatsApp()">✅ Ya pagué (WhatsApp)</a>
+        </div>
+
+        <p class="small" style="margin-top:10px">
+          Tip: si tu app bancaria permite <b>pegar</b> la CLABE, reduces errores al teclear.
+        </p>
+      </section>
+
+      <aside class="card">
+        <h2 style="margin:0 0 10px;font-size:18px">Hacerlo todavía más rápido</h2>
+
+        <details>
+          <summary>📲 Abrir mi app bancaria (guía rápida)</summary>
+          <p class="small">
+            Los teléfonos no siempre pueden “abrir el banco” automáticamente desde un QR (cada app es su mundo).
+            Lo más seguro es: abrir tu app → Transferir → pegar CLABE / cuenta → monto → enviar.
+          </p>
+          <ul class="small">
+            <li><b>Transferencia SPEI</b>: usa la <b>CLABE</b>.</li>
+            <li><b>Depósito</b>: suele usar el <b>número de cuenta</b>.</li>
+            <li>En <b>concepto</b> pon tu nombre o número de pedido.</li>
+          </ul>
+        </details>
+
+        <details style="margin-top:10px">
+          <summary>🧾 ¿Qué enviar por WhatsApp?</summary>
+          <p class="small">
+            Ideal: captura del comprobante + monto + tu nombre + referencia/pedido.
+            El botón “Ya pagué” arma el mensaje por ti.
+          </p>
+        </details>
+
+        <details style="margin-top:10px">
+          <summary>🛟 Si algo falla</summary>
+          <p class="small">
+            Si no te deja copiar, mantén presionado sobre el número y selecciona “Copiar”.
+            Si WhatsApp no abre, copia el resumen y envíalo manualmente.
+          </p>
+        </details>
+
+        <footer>Última actualización: <span id="fecha"></span></footer>
+      </aside>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Copiado ✅</div>
+
+  <script>
+    const phone = "52" + "2229013497"; // WhatsApp con lada MX
+    const negocio = "Bombas y Carburadores";
+
+    document.getElementById("fecha").textContent = new Date().toLocaleDateString("es-MX");
+
+    function toast(msg){
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(()=>t.classList.remove("show"), 1400);
+    }
+
+    async function copyRaw(str){
+      try{
+        await navigator.clipboard.writeText(str);
+        toast("Copiado ✅");
+      }catch(e){
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = str; document.body.appendChild(ta);
+        ta.select(); document.execCommand("copy");
+        ta.remove();
+        toast("Copiado ✅");
+      }
+    }
+
+    function copyText(id){
+      const el = document.getElementById(id);
+      copyRaw(el.textContent.trim());
+    }
+
+    function resumenPago(){
+      const banco = document.getElementById("banco").textContent.trim();
+      const cuenta = document.getElementById("cuenta").textContent.trim();
+      const clabe = document.getElementById("clabe").textContent.trim();
+      const ref = document.getElementById("referencia").value.trim();
+      const monto = document.getElementById("monto").value.trim();
+      const notas = document.getElementById("notas").value.trim();
+
+      const parts = [
+        `Pago a: ${negocio}`,
+        `Banco: ${banco}`,
+        `Cuenta: ${cuenta}`,
+        `CLABE: ${clabe}`,
+        ref ? `Referencia/Concepto: ${ref}` : null,
+        monto ? `Monto: $${monto} MXN` : `Monto: (variable)`,
+        notas ? `Notas: ${notas}` : null
+      ].filter(Boolean);
+
+      return parts.join("\n");
+    }
+
+    function copyResumen(){
+      copyRaw(resumenPago());
+    }
+
+    function openWhatsApp(){
+      const msg = resumenPago() + "\n\nAdjunto comprobante de pago. ✅";
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+      window.open(url, "_blank");
+      return false;
+    }
+  </script>
+</body>
+</html>
