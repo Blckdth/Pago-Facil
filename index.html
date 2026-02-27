@@ -151,11 +151,24 @@
     }
 
     function openWhatsApp(){
-      const msg = resumenPago() + "\\n\\nAdjunto comprobante de pago. ✅";
-      const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-      window.open(url, "_blank");
-      return false;
-    }
+  const banco = document.getElementById("banco").textContent.trim();
+  const cuenta = document.getElementById("cuenta").textContent.trim();
+  const clabe = document.getElementById("clabe").textContent.trim();
+
+  const msg =
+`✅ *Comprobante de pago — ${negocio}*
+
+🏦 *Banco:* ${banco}
+🔢 *Cuenta:* ${cuenta}
+💳 *CLABE:* ${clabe}
+
+📎 *Adjunto comprobante de pago.*
+🙏 Gracias.`;
+
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  window.open(url, "_blank");
+  return false;
+}
   </script>
 </body>
 </html>
